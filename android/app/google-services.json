@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704340419764",
+    "project_id": "messageberobatplus",
+    "storage_bucket": "messageberobatplus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704340419764:android:d16a14660efe480cf3e3e1",
+        "android_client_info": {
+          "package_name": "com.tamobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704340419764-lj2q8d5uhi8rfva0q20tde4ehoc7opvl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu72vm22qjNbFNKKARPRDlncOgQvDbdH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704340419764-lj2q8d5uhi8rfva0q20tde4ehoc7opvl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
