@@ -2141,6 +2141,11 @@
     redux-thunk "^2.4.2"
     reselect "^4.1.7"
 
+"@robbywh/react-native-zendesk-messaging@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@robbywh/react-native-zendesk-messaging/-/react-native-zendesk-messaging-1.1.0.tgz"
+  integrity sha512-nFSfC2RYg4BrugaCqNb0IrR2BimSGt33i+h5MrEVg9LvWox6el9eYS7zxytlhccsOJzwpZC4rgUniAz2WDwuiw==
+
 "@sideway/address@^4.1.3":
   version "4.1.4"
   resolved "https://registry.npmjs.org/@sideway/address/-/address-4.1.4.tgz"

@@ -1,11 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image,Button } from 'react-native';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 
 import Heading from '../../../../components/Heading';
 import Navigasi from '../../../../partials/navigasi';
 
+
+import {
+  initialize,
+  showMessaging,
+  
+} from '@robbywh/react-native-zendesk-messaging';
+
+
+
+
+
 const ChatBot = ({ navigation }) => {
+
+  React.useEffect(() => {
+    initialize("eyJzZXR0aW5nc191cmwiOiJodHRwczovL25vdGhpbmc0Nzg0LnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxSEFIQjhHS1BLUjcwREg0SlNIUjFQS1JBLmpzb24ifQ=="
+
+       
+    );
+  }, []);
   const [message, setMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -26,8 +44,26 @@ const ChatBot = ({ navigation }) => {
       </View>
 
     <View style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
-    <TouchableOpacity onPress={() => handleOptionClick('Jadwal Poliklinik')}>
-    <View style={styles.card}>
+    <TouchableOpacity >
+
+      {/* <Text
+        style={{
+          marginBottom: 50,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: 20,
+        }}
+      >
+        Zendesk Messaging
+      </Text>
+      <Text style={{ marginBottom: 10, textAlign: 'center' }}>
+        Press The "CHAT" button to test
+      </Text>
+      <Button onPress={() => showMessaging()} title="CHAT" /> */}
+
+
+
+    {/* <View style={styles.card}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={require('../../../../assets/images/people.png')}
@@ -36,11 +72,11 @@ const ChatBot = ({ navigation }) => {
         <Text style={{ marginLeft: 10 }}>Ibnu</Text>
       </View>
       <Text>Apakah Anda Ingin Bertanya Mengenai Jadwal Poliklinik?</Text>
-    </View>
+    </View> */}
   </TouchableOpacity>
 
   {/* Card 2 */}
-  <TouchableOpacity onPress={() => handleOptionClick('Jadwal Poliklinik')}>
+  <TouchableOpacity onPress={showMessaging}>
     <View style={styles.card}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image
@@ -49,11 +85,15 @@ const ChatBot = ({ navigation }) => {
         />
          <Text style={{ marginLeft: 10 }}>Gibran</Text>
       </View>
-      <Text>Apakah Anda Ingin Bertanya Mengenai Jadwal Dokter?</Text>
+      <Text style={{ backgroundColor: 'blue', color: 'white', padding: 10 }}>
+         Apakah Anda Ingin Bertanya Mengenai Jadwal Poliklinik?
+        </Text>
+     
     </View>
+      {/* Card 3 */}
   </TouchableOpacity>
   <TouchableOpacity onPress={() => handleOptionClick('Jadwal Dokter')}>
-    <View style={styles.card}>
+    {/* <View style={styles.card}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={require('../../../../assets/images/people.png')}
@@ -62,10 +102,9 @@ const ChatBot = ({ navigation }) => {
          <Text style={{ marginLeft: 10 }}>Sule</Text>
       </View>
       <Text>Apakah Anda Ingin Bertanya Mengenai Seputar Kesehatan?</Text>
-    </View>
+    </View> */}
   </TouchableOpacity>
 </View>
-
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
