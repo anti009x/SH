@@ -44,6 +44,7 @@ export default {
   DETAIL_OBAT_RESEP: "DetailObatResep",
   INVOICE: "Invoice",
   CHATBOT:"ChatBot",
+  NOTIFIKASI:"Notifikasi",
 
 
   // Dokter

@@ -1,36 +1,27 @@
 {
   "project_info": {
-    "project_number": "704340419764",
-    "project_id": "messageberobatplus",
-    "storage_bucket": "messageberobatplus.appspot.com"
+    "project_number": "578290916365",
+    "firebase_url": "https://smarthealth-360f7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smarthealth-360f7",
+    "storage_bucket": "smarthealth-360f7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:704340419764:android:d16a14660efe480cf3e3e1",
+        "mobilesdk_app_id": "1:578290916365:android:21ecfeb0e117251c5fc944",
         "android_client_info": {
           "package_name": "com.tamobile"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "704340419764-lj2q8d5uhi8rfva0q20tde4ehoc7opvl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBu72vm22qjNbFNKKARPRDlncOgQvDbdH8"
+          "current_key": "AIzaSyB_4RHYzddlxjEBf-5ro16qSala4Kqt7dA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "704340419764-lj2q8d5uhi8rfva0q20tde4ehoc7opvl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -51,6 +51,7 @@ import Profile from '../views/perawat/Profile';
 import Riwayat from '../views/perawat/Riwayat';
 import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 import ChatBot from '../views/member/FiturUnggulan/ChatBot';
+import Notifikasi from '../views/member/FiturUnggulan/Notifikasi';
 import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
 import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek';
 import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
@@ -436,6 +437,11 @@ const Router = () => {
          <Stack.Screen
         name={Navigasi.CHATBOT}
         component={ChatBot}
+        options={{ headerShown: false }}
+      />
+         <Stack.Screen
+        name={Navigasi.NOTIFIKASI}
+        component={Notifikasi}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -251,7 +251,15 @@ const DashboardMember = ({ navigation }) => {
             nameIcon={""}
             textfitur={"ChatBot"}
           />
+            <ListFitur
+            onPress={() => {
+              navigation.replace(Navigasi.NOTIFIKASI)
+            }}
+            nameIcon={""}
+            textfitur={"Notifikasi"}
+          />
         </View>
+        
 
         <View
           style={{
