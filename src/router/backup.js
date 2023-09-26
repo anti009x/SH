@@ -62,6 +62,7 @@ import LupaPasswordAutentikasi from '../views/public/Autentikasi/LupaPasswordAut
 import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukByKategori';
 import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
 import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanPembayaranKonsultasi';
+import JadwalDokter from '../views/member/FiturUnggulan/ChatBot';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -276,6 +277,11 @@ const Router = () => {
       <Stack.Screen
         name={Navigasi.SPESIALIS_BUAT_JANJI}
         component={SpesialisBuatJanji}
+        options={{ headerShown: false }}
+      />
+         <Stack.Screen
+        name={Navigasi.JADWAL_DOKTER}
+        component={JadwalDokter}
         options={{ headerShown: false }}
       />
       <Stack.Screen
