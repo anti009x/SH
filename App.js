@@ -7,8 +7,11 @@ import store from './src/config/redux/store';
 import AnimasiLogin from './src/components/AnimasiLogin';
 import { TimeProvider } from './src/components/Time/TimeContext';
 
+
+
 const MainApp = () => {
   const stateGlobal = useSelector(state => state);
+
   return (
     <>
       <NavigationContainer>

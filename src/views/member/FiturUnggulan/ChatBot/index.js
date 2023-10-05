@@ -5,18 +5,22 @@ import StatusBarComponent from '../../../../components/StatusBar/StatusBarCompon
 import Heading from '../../../../components/Heading';
 import Navigasi from '../../../../partials/navigasi';
 
+import { useNavigation } from '@react-navigation/native';
+//  import JadwalDokter from 'JadwalDokter';
 
 import {
   initialize,
   showMessaging,
   
 } from '@robbywh/react-native-zendesk-messaging';
+import navigasi from '../../../../partials/navigasi';
 
 
 
 
 
-const ChatBot = ({ navigation }) => {
+const ChatBot = ({  }) => {
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     initialize("eyJzZXR0aW5nc191cmwiOiJodHRwczovL25vdGhpbmc0Nzg0LnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxSEFIQjhHS1BLUjcwREg0SlNIUjFQS1JBLmpzb24ifQ=="
@@ -31,9 +35,10 @@ const ChatBot = ({ navigation }) => {
     setMessage('');
   };
 
-  const handleOptionClick = (option) => {
-    console.log('Option clicked:', option);
-  };
+  // const handleOptionClick = (option) => {
+  //   console.log('Option clicked:', option);
+  //   navigation.navigate(Navigasi.JADWAL_DOKTER);
+  // };
 
   return (
     <View style={{ flex: 1 }}>
@@ -92,8 +97,8 @@ const ChatBot = ({ navigation }) => {
     </View>
       {/* Card 3 */}
   </TouchableOpacity>
-  <TouchableOpacity onPress={() => handleOptionClick('Jadwal Dokter')}>
-    {/* <View style={styles.card}>
+  <TouchableOpacity  onPress={() => navigation.navigate(Navigasi.JADWAL_DOKTER)}>
+    <View style={styles.card}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Image
           source={require('../../../../assets/images/people.png')}
@@ -102,7 +107,7 @@ const ChatBot = ({ navigation }) => {
          <Text style={{ marginLeft: 10 }}>Sule</Text>
       </View>
       <Text>Apakah Anda Ingin Bertanya Mengenai Seputar Kesehatan?</Text>
-    </View> */}
+    </View>
   </TouchableOpacity>
 </View>
       <View style={styles.inputContainer}>

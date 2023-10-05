@@ -13,8 +13,10 @@ const firebaseConfig = {
   projectId: "smarthealth-360f7",
   storageBucket: "smarthealth-360f7.appspot.com",
   messagingSenderId: "578290916365",
-  appId: "1:578290916365:web:b716147dbb43be2f5fc944",
-  measurementId: "G-84HBH8KMWD"
+  appId: "1:578290916365:web:8c689a536f9479d15fc944",
+  measurementId: "G-M6CYMSJDD9"
+
+
 
 
 };
