@@ -46,6 +46,7 @@ export default {
   CHATBOT:"ChatBot",
   NOTIFIKASI:"Notifikasi",
   JADWAL_DOKTER: "JadwalDokter",
+  JADWAL_POLIKLINIK: "JadwalPoliklinik",
 
 
   // Dokter
