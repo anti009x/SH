@@ -1,33 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image,Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 
 import Heading from '../../../../components/Heading';
 import Navigasi from '../../../../partials/navigasi';
-
+import JadwalPoliklinik from './JadwalPoliklinik';
+import { Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-//  import JadwalDokter from 'JadwalDokter';
 
-import {
-  initialize,
-  showMessaging,
-  
-} from '@robbywh/react-native-zendesk-messaging';
-import navigasi from '../../../../partials/navigasi';
+import JadwalDokter from './JadwalDokter';
 
-
-
-
-
-const ChatBot = ({  }) => {
+const ChatBot = ({}) => {
   const navigation = useNavigation();
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const fadeAnimCard2 = useState(new Animated.Value(0))[0]; 
+  const moveAnimCard2 = useState(new Animated.Value(0))[0];
 
-  React.useEffect(() => {
-    initialize("eyJzZXR0aW5nc191cmwiOiJodHRwczovL25vdGhpbmc0Nzg0LnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxSEFIQjhHS1BLUjcwREg0SlNIUjFQS1JBLmpzb24ifQ=="
+  const [showPoliknikList, setShowPoliknikList] = useState(false);
 
-       
-    );
-  }, []);
+  const [showJadwalDokter, setShowJadwalDokter] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -35,10 +26,56 @@ const ChatBot = ({  }) => {
     setMessage('');
   };
 
-  // const handleOptionClick = (option) => {
-  //   console.log('Option clicked:', option);
-  //   navigation.navigate(Navigasi.JADWAL_DOKTER);
-  // };
+  const handleCard1Click = () => {
+    if (!showPoliknikList) {
+        setShowPoliknikList(true);
+        Animated.timing(moveAnimCard2, {
+            toValue: 100,
+            duration: 2000,
+            useNativeDriver: true
+        }).start();
+    } else {
+        setShowPoliknikList(false);
+        Animated.timing(moveAnimCard2, {
+            toValue: 0,  // kembalikan posisi card2 ke awal
+            duration: 2000,
+            useNativeDriver: true
+        }).start();
+    }
+  };
+
+  const handleCard2Click = () => {
+    if (!showJadwalDokter) {
+        setShowJadwalDokter(true);
+        // Animated.timing(moveAnimCard2, {
+        //     toValue: 100,
+        //     duration: 2000,
+        //     useNativeDriver: true
+        // }).start();
+    } else {
+        setShowJadwalDokter(false);
+        // Animated.timing(moveAnimCard2, {
+        //     toValue: 0,  // kembalikan posisi card2 ke awal
+        //     duration: 2000,
+        //     useNativeDriver: true
+        // }).start();
+    }
+  };
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true
+      }),
+      Animated.timing(fadeAnimCard2, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true
+      })
+    ]).start();
+  }, [fadeAnim, fadeAnimCard2]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -48,68 +85,45 @@ const ChatBot = ({  }) => {
         <StatusBarComponent />
       </View>
 
-    <View style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
-    <TouchableOpacity >
+      <View style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
 
-      {/* <Text
-        style={{
-          marginBottom: 50,
-          textAlign: 'center',
-          fontWeight: 'bold',
-          fontSize: 20,
-        }}
-      >
-        Zendesk Messaging
-      </Text>
-      <Text style={{ marginBottom: 10, textAlign: 'center' }}>
-        Press The "CHAT" button to test
-      </Text>
-      <Button onPress={() => showMessaging()} title="CHAT" /> */}
-
-
-
-    {/* <View style={styles.card}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          source={require('../../../../assets/images/people.png')}
-          style={{ width: 50, height: 50 }}
-        />
-        <Text style={{ marginLeft: 10 }}>Ibnu</Text>
-      </View>
-      <Text>Apakah Anda Ingin Bertanya Mengenai Jadwal Poliklinik?</Text>
-    </View> */}
-  </TouchableOpacity>
-
-  {/* Card 2 */}
-  <TouchableOpacity onPress={showMessaging}>
-    <View style={styles.card}>
+        {/* card1 */}
+        <TouchableOpacity onPress={handleCard1Click}>
+          <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          source={require('../../../../assets/images/people.png')}
-          style={{ width: 50, height: 50 }}
-        />
-         <Text style={{ marginLeft: 10 }}>Gibran</Text>
-      </View>
-      <Text style={{ backgroundColor: 'blue', color: 'white', padding: 10 }}>
-         Apakah Anda Ingin Bertanya Mengenai Jadwal Poliklinik?
-        </Text>
-     
-    </View>
-      {/* Card 3 */}
-  </TouchableOpacity>
-  <TouchableOpacity  onPress={() => navigation.navigate(Navigasi.JADWAL_DOKTER)}>
-    <View style={styles.card}>
+                <Image
+                  source={require('../../../../assets/images/people.png')}
+                  style={{ width: 50, height: 50 }}
+                />
+                <Text style={{ marginLeft: 10 }}>Sule</Text>
+            </View>
+            <Animated.Text style={{ opacity: fadeAnim }}>
+                Apakah Anda Ingin Bertanya Mengenai Jadwal Poliknik ?
+            </Animated.Text>
+          </Animated.View>
+          {showPoliknikList && <JadwalPoliklinik />}
+        </TouchableOpacity>
+   
+        {/* card2 */}
+        <TouchableOpacity  onPress={handleCard2Click}>
+          <Animated.View style={[styles.card, { opacity: fadeAnimCard2, transform: [{ translateY: moveAnimCard2 }] }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          source={require('../../../../assets/images/people.png')}
-          style={{ width: 50, height: 50 }}
-        />
-         <Text style={{ marginLeft: 10 }}>Sule</Text>
+                <Image
+                  source={require('../../../../assets/images/people.png')}
+                  style={{ width: 50, height: 50 }}
+                />
+                <Text style={{ marginLeft: 10 }}>Sule</Text>
+            </View>
+            <Animated.Text style={{ opacity: fadeAnimCard2 }}>
+                Apakah Anda Ingin Bertanya Mengenai Jadwal Dokter? ?
+            </Animated.Text>
+          </Animated.View>
+          {showJadwalDokter && <JadwalDokter />}
+        </TouchableOpacity>
+
+
       </View>
-      <Text>Apakah Anda Ingin Bertanya Mengenai Seputar Kesehatan?</Text>
-    </View>
-  </TouchableOpacity>
-</View>
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -154,8 +168,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 5,
   },
+
+  
   botText: {
     fontSize: 16,
     fontWeight: 'bold',
