@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ScrollView } from 'react-native';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 
 import Heading from '../../../../components/Heading';
@@ -27,39 +27,17 @@ const ChatBot = ({}) => {
   };
 
   const handleCard1Click = () => {
-    if (!showPoliknikList) {
-        setShowPoliknikList(true);
-        Animated.timing(moveAnimCard2, {
-            toValue: 100,
-            duration: 2000,
-            useNativeDriver: true
-        }).start();
-    } else {
-        setShowPoliknikList(false);
-        Animated.timing(moveAnimCard2, {
-            toValue: 0,  // kembalikan posisi card2 ke awal
-            duration: 2000,
-            useNativeDriver: true
-        }).start();
-    }
+    setShowPoliknikList(!showPoliknikList);
+    Animated.timing(moveAnimCard2, {
+      toValue: showPoliknikList ? 0 : 100,  // Toggle the value based on showPoliknikList
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
   };
 
   const handleCard2Click = () => {
-    if (!showJadwalDokter) {
-        setShowJadwalDokter(true);
-        // Animated.timing(moveAnimCard2, {
-        //     toValue: 100,
-        //     duration: 2000,
-        //     useNativeDriver: true
-        // }).start();
-    } else {
-        setShowJadwalDokter(false);
-        // Animated.timing(moveAnimCard2, {
-        //     toValue: 0,  // kembalikan posisi card2 ke awal
-        //     duration: 2000,
-        //     useNativeDriver: true
-        // }).start();
-    }
+    setShowJadwalDokter(!showJadwalDokter);
+
   };
 
   useEffect(() => {
@@ -85,11 +63,11 @@ const ChatBot = ({}) => {
         <StatusBarComponent />
       </View>
 
-      <View style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
+      <ScrollView style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
 
         {/* card1 */}
         <TouchableOpacity onPress={handleCard1Click}>
-          <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
+    <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={require('../../../../assets/images/people.png')}
@@ -101,12 +79,13 @@ const ChatBot = ({}) => {
                 Apakah Anda Ingin Bertanya Mengenai Jadwal Poliknik ?
             </Animated.Text>
           </Animated.View>
-          {showPoliknikList && <JadwalPoliklinik />}
+         
         </TouchableOpacity>
+        {showPoliknikList && <JadwalPoliklinik />}
    
         {/* card2 */}
-        <TouchableOpacity  onPress={handleCard2Click}>
-          <Animated.View style={[styles.card, { opacity: fadeAnimCard2, transform: [{ translateY: moveAnimCard2 }] }]}>
+        <TouchableOpacity onPress={handleCard2Click}>
+    <Animated.View style={[styles.card, { opacity: fadeAnimCard2 }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={require('../../../../assets/images/people.png')}
@@ -118,12 +97,12 @@ const ChatBot = ({}) => {
                 Apakah Anda Ingin Bertanya Mengenai Jadwal Dokter? ?
             </Animated.Text>
           </Animated.View>
-          {showJadwalDokter && <JadwalDokter />}
+        
         </TouchableOpacity>
+        {showJadwalDokter && <JadwalDokter />}
+        </ScrollView>
 
-
-      </View>
-
+ 
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -168,7 +147,8 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 10,
-    marginBottom: 5,
+    marginBottom: 10,
+
   },
 
   

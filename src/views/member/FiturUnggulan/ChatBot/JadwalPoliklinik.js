@@ -1,58 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Animated, Dimensions } from 'react-native';
-
-// JadwalPoliklinik.js
+import axios from 'axios';
+import { getData } from '../../../../utils';
 
 const { width } = Dimensions.get('window');
 
 const JadwalPoliklinik = () => {
-  const fadeAnim1 = useState(new Animated.Value(0))[0];
-  const fadeAnim2 = useState(new Animated.Value(0))[0];
-  const fadeAnim3 = useState(new Animated.Value(0))[0];
-  const fadeAnim4 = useState(new Animated.Value(0))[0];
+  
+  const [dataPribadi, setDataPribadi] = useState({});
+  const [specializations, setSpecializations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fadeAnims, setFadeAnims] = useState([]);  // Gunakan useState
 
   useEffect(() => {
-    Animated.stagger(500, [
-      Animated.timing(fadeAnim1, {
+    getDataUserLocal();
+  }, [dataPribadi.token]);
+
+  const getDataUserLocal = () => {
+    getData('dataUser').then(res => {
+      setDataPribadi(res);
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.100.56:8000/api/master/penyakit/spesialis_penyakit', {
+          headers: {
+            Authorization: 'Bearer ' + dataPribadi.token
+          }
+        });
+        setSpecializations(response.data.data);
+        const newFadeAnims = animateFadeIn(response.data.data.length);
+        setFadeAnims(newFadeAnims);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [dataPribadi.token]);
+  const animateFadeIn = (length) => {
+    const anims = [];
+    // Generate fade animations for each specialization
+    for (let i = 0; i < length; i++) {
+      const fadeAnim = new Animated.Value(0);
+      anims.push(fadeAnim);
+      Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 1000,
-        useNativeDriver: true
-      }),
-      Animated.timing(fadeAnim2, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true
-      }),
-      Animated.timing(fadeAnim3, {
-        toValue: 1,
-        duration: 2000,
-        useNativeDriver: true
-      }),
-      Animated.timing(fadeAnim4, {
-        toValue: 1,
-        duration: 2500,
-        useNativeDriver: true
-      })
-    ]).start();
-  }, [fadeAnim1, fadeAnim2, fadeAnim3, fadeAnim4]);
+        useNativeDriver: true,
+        delay: 1000 * i
+      }).start();
+    }
+    return anims;
+  };
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.card, { opacity: fadeAnim1, marginBottom: 10 }]}>
-        <Text>Klinik Saraf</Text>
-      </Animated.View>
-
-      <Animated.View style={[styles.card, { opacity: fadeAnim2, marginBottom: 10 }]}>
-        <Text>Klinik Mata</Text>
-      </Animated.View>
-
-      <Animated.View style={[styles.card, { opacity: fadeAnim3, marginBottom: 10 }]}>
-        <Text>Klinik Kulit</Text>
-      </Animated.View>
-      
-      <Animated.View style={[styles.card, { opacity: fadeAnim4, marginBottom: 10 }]}>
-        <Text>Klinik Anak</Text>
-      </Animated.View>
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : (
+        specializations.map((specialization, index) => (
+          <Animated.View key={index} style={[styles.card, { opacity: fadeAnims[index] }]}>
+            <Text>{specialization.nama_spesialis}</Text>
+          </Animated.View>
+        ))
+      )}
     </View>
   );
 };
@@ -62,16 +76,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    padding: 10, // Padding added to space between cards and screen edge
+    padding: 10,
   },
   card: {
-  
     padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    width: (width - 40) / 3.2, // Adjusted width for 3 cards in a row with some margin
+    width: (width - 40) / 3.2,
+    marginBottom: 10,
   },
 });
 
