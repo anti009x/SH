@@ -53,7 +53,7 @@ import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 import ChatBot from '../views/member/FiturUnggulan/ChatBot';
 import JadwalDokter from '../views/member/FiturUnggulan/ChatBot/JadwalDokter';
 import JadwalPoliklinik from '../views/member/FiturUnggulan/ChatBot/JadwalPoliklinik';
-import Notifikasi from '../views/member/FiturUnggulan/Notifikasi';
+import Diagnosa from '../views/member/FiturUnggulan/Diagnosa';
 import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
 import DetailPraktek from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji/DetailPraktek';
 import DataAlamat from '../views/member/ProfileAkun/AlamatTersimpan/DataAlamat';
@@ -442,8 +442,8 @@ const Router = () => {
         options={{ headerShown: false }}
       />
          <Stack.Screen
-        name={Navigasi.NOTIFIKASI}
-        component={Notifikasi}
+        name={Navigasi.DIAGNOSA}
+        component={Diagnosa}
         options={{ headerShown: false }}
       />
       <Stack.Screen

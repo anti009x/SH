@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Animated, Dimensions } from 'react-native';
 import axios from 'axios';
-import { getData } from '../../../../utils';
+import { getData,baseUrl } from '../../../../utils';
 // JadwalDokter.js
 
 const { width } = Dimensions.get('window');
@@ -23,19 +23,23 @@ const JadwalDokter = () => {
     });
   };
 
-  useEffect(() => {
+  useEffect(() => {             
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.100.56:8000/api/akun/dokter/data', {
+        const response = await axios({
+          url: `${baseUrl.url}/akun/dokter/data`,
           headers: {
-            Authorization: 'Bearer ' + dataPribadi.token
-          }
-        });
+              Authorization: 'Bearer ' + dataPribadi.token
+          },
+          method: "GET"
+      });
         setSpecializations(response.data.data);
         const newFadeAnims = animateFadeIn(response.data.data.length);
         setFadeAnims(newFadeAnims);
         setIsLoading(false);
       } catch (error) {
+        // console.error(error);
+  setIsLoading(false);
         setIsLoading(false);
       }
     };

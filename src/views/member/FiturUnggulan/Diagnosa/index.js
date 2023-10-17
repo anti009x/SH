@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import Heading from '../../../../components/Heading';
 import Navigasi from '../../../../partials/navigasi';
 
-const Notifikasi = () => {
+const Diagnosa = () => {
   const navigation = useNavigation();
   const [fcmToken, setFcmToken] = useState(null);
 
@@ -67,7 +67,7 @@ const Notifikasi = () => {
   return (
     <View style={{ flex: 1 }}>
       <StatusBarComponent />
-      <Heading navigasi={() => navigation.replace(Navigasi.MAIN_APP)} textHeading={'Notifikasi'} />
+      <Heading navigasi={() => navigation.replace(Navigasi.MAIN_APP)} textHeading={'Diagnosa'} />
       <View style={styles.navigationHeader}>
         <StatusBarComponent />
       </View>
@@ -79,4 +79,4 @@ const Notifikasi = () => {
   );
 };
 
-export default Notifikasi;
+export default Diagnosa;
