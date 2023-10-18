@@ -253,10 +253,10 @@ const DashboardMember = ({ navigation }) => {
           />
             <ListFitur
             onPress={() => {
-              navigation.replace(Navigasi.NOTIFIKASI)
+              navigation.replace(Navigasi.DIAGNOSA)
             }}
             nameIcon={""}
-            textfitur={"Notifikasi"}
+            textfitur={"Diagnosa"}
           />
         </View>
         
