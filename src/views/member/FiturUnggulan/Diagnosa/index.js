@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Image } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import { useNavigation } from '@react-navigation/native';
 import Heading from '../../../../components/Heading';
-import Navigasi from '../../../../partials/navigasi';
+import axios from 'axios';
 
 const Diagnosa = () => {
   const navigation = useNavigation();
   const [cameraData, setCameraData] = useState(null);
+  const [diagnosaResult, setDiagnosaResult] = useState(null);
+  const [diagnosaPercentage, setDiagnosaPercentage] = useState(null);
 
   const requestCameraPermission = async () => {
     try {
@@ -24,7 +26,7 @@ const Diagnosa = () => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission given");
-        openCamera();  // Open the camera after permission is granted
+        openCamera();
       } else {
         console.log("Camera permission denied");
       }
@@ -33,59 +35,105 @@ const Diagnosa = () => {
     }
   };
 
+  const uploadPhoto = async (fileUri) => {
+    try {
+      let uniquePictureName = generateUniquePictureName();
+      let formData = new FormData();
+      formData.append('file', {
+        uri: fileUri,
+        type: 'image/jpeg',
+        name: uniquePictureName + '.jpg',
+      });
+
+      let response = await axios.post(
+        'https://api.rafliseptiannn25.web.ti.polindra.ac.id/smarthealth_api/public/api/send-stroke-face',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log('Upload berhasil:', response.data);
+
+        let data = JSON.parse(response.data.response);
+
+        setDiagnosaResult(data.message);
+        setDiagnosaPercentage(data.percentage);
+      } else {
+        console.error('Upload gagal. Status:', response.status, 'Data:', response.data);
+      }
+    } catch (error) {
+      console.error('Kesalahan mengunggah file:', error);
+    }
+  };
+
+  const generateUniquePictureName = () => {
+    return Math.random().toString(36).substring(2, 15);
+  };
+
   const openCamera = () => {
     const options = {
       mediaType: 'photo',
       quality: 1,
     };
-
+     
     launchCamera(options, (response) => {
       if (response.didCancel) {
-        console.log('Cancelled');
+        console.log('Dibatalkan');
       } else if (response.errorCode) {
         console.log(response.errorMessage);
       } else {
         const data = response.assets;
         console.log(data);
-        setCameraData(data);  // Set camera data to state
+        setCameraData(data);
+    
+        if (data && data[0] && data[0].uri) {
+          uploadPhoto(data[0].uri);
+        }
       }
     });
   };
 
   useEffect(() => {
-    requestCameraPermission();  // Request camera permission when the component mounts
+    requestCameraPermission();
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <StatusBarComponent />
       <Heading navigasi={() => navigation.replace(Navigasi.MAIN_APP)} textHeading={'Diagnosa'} />
-      <View style={styles.navigationHeader}>
-        <StatusBarComponent />
-      </View>
       <View style={styles.card}>
         <TouchableOpacity onPress={openCamera}>
           <Text>
-            Tempat untuk membuka kamera
+            Buka Kamera
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.card1}>
-        <Text style = {{color:'white',  padding: 20,borderRadius: 10,elevation: 2,}}>
-          Tempat untuk hasil
-        </Text>
+      <View style={styles.imageContainer}>
         {cameraData && (
           <Image
-            source={{ uri: cameraData[0].uri }}  // Display the image from camera
-            style={{ width: 350, height: 300 , marginTop:20, }}
+            source={{ uri: cameraData[0].uri }}
+            style={styles.image}
           />
         )}
       </View>
+      {/*diagnosaResult !== null && diagnosaPercentage !== null && */ (
+        <View style={styles.diagnosaContainer}>
+          <Text style={styles.diagnosaText}>Hasil Diagnosa: {/*diagnosaResult*/}/</Text>
+          <Text style={styles.diagnosaText}>Persentase: {/*diagnosaPercentage*/}%</Text>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   card: {
     backgroundColor: 'white',
     padding: 20,
@@ -93,15 +141,31 @@ const styles = StyleSheet.create({
     elevation: 3,
     alignItems: 'center',
   },
-  card1: {
-    backgroundColor: '#BDC3C7',
+  imageContainer: {
+    alignItems: 'center',
+    padding: 40,
+    borderRadius: 10,
+    elevation: 3,
+ marginTop:10,
+ paddingTop:10, //asw awas padding jangan dibuat 'center' crash nanti
+
+  
+  },
+  image: {
+    width: 350,
+    height: 300,
+    marginTop: 20,
+  },
+  diagnosaContainer: {
+    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     elevation: 3,
     alignItems: 'center',
-    marginTop:10,
-    flex :1,
-    
+    marginTop: 10,
+  },
+  diagnosaText: {
+    color: 'black',
   },
 });
 
