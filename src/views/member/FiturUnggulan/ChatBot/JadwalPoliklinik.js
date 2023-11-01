@@ -13,14 +13,30 @@ const JadwalPoliklinik = () => {
   const [specializations, setSpecializations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fadeAnims, setFadeAnims] = useState([]);  // Gunakan useState
+  const [doctorNames, setDoctorNames] = useState([]);
 
   useEffect(() => {
     getDataUserLocal();
   }, [dataPribadi.token]);
 
-  const handleCardClick = (specialization) => {
+  const handleCardClick = async (specialization) => {
     setSelectedCard(specialization.nama_spesialis);
-};
+    
+    try {
+      const response = await axios({
+        url: `http://192.168.100.56:8000/api/master/spesialis/SPS-001/get_dokter`,
+        headers: {
+          Authorization: 'Bearer ' + dataPribadi.token
+      },
+      method: "GET"
+      });
+      
+      const names = response.data.data.map(item => item.user.nama);
+      setDoctorNames(names);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getDataUserLocal = () => {
     getData('dataUser').then(res => {
@@ -78,7 +94,12 @@ const JadwalPoliklinik = () => {
       ))
       
       )}
-      {selectedCard && <View style={styles.selectedCard}><Text>Ini card: {selectedCard}</Text></View>}
+{selectedCard && <View style={styles.selectedCard}>
+  <Text>Ini card: {selectedCard}</Text>
+  {doctorNames && doctorNames.map(name => (
+    <Text key={name}>Nama Dokter: {name}</Text>
+  ))}
+</View>}
     </View>
   );
 };

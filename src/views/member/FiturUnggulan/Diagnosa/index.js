@@ -5,12 +5,13 @@ import StatusBarComponent from '../../../../components/StatusBar/StatusBarCompon
 import { useNavigation } from '@react-navigation/native';
 import Heading from '../../../../components/Heading';
 import axios from 'axios';
-
+import Navigasi from '../../../../partials/navigasi';
 const Diagnosa = () => {
   const navigation = useNavigation();
   const [cameraData, setCameraData] = useState(null);
   const [diagnosaResult, setDiagnosaResult] = useState(null);
   const [diagnosaPercentage, setDiagnosaPercentage] = useState(null);
+  // const [Navigasi] = useState(null);
 
   const requestCameraPermission = async () => {
     try {
