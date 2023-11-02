@@ -20,6 +20,7 @@ import { baseUrl } from '../../../utils';
 import ButtonAllData from '../../../components/ButtonAllData';
 import ListFitur from '../../../components/ListFitur';
 import LinearGradient from 'react-native-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const DashboardMember = ({ navigation }) => {
   const [user, setUser] = useState({});
@@ -235,27 +236,27 @@ const DashboardMember = ({ navigation }) => {
               navigation.replace(Navigasi.RESERVASI)
             }}
             nameIcon={"book"}
-            textfitur={"Antrian Saya"}
+            textfitur={"Antrian "}
           />
           <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.TOKO_KESEHATAN_PRODUK)
             }}
             nameIcon={"medkit"}
-            textfitur={"Toko Sekitar"}
+            textfitur={"Toko"}
           />
            <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.CHATBOT)
             }}
-            nameIcon={""}
-            textfitur={"ChatBot"}
+            nameIcon={"person-circle-sharp"}
+            textfitur={"Chat"}
           />
             <ListFitur
             onPress={() => {
               navigation.replace(Navigasi.DIAGNOSA)
             }}
-            nameIcon={""}
+            nameIcon={"duplicate"}
             textfitur={"Diagnosa"}
           />
         </View>
