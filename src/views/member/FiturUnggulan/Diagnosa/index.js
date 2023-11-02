@@ -47,7 +47,7 @@ const Diagnosa = () => {
       });
 
       let response = await axios.post(
-        'https://api.rafliseptiannn25.web.ti.polindra.ac.id/smarthealth_api/public/api/send-stroke-face',
+        'http://192.168.239.116:8000/api/send-stroke-face',
         formData,
         {
           headers: {
@@ -121,12 +121,12 @@ const Diagnosa = () => {
           />
         )}
       </View>
-      {/*diagnosaResult !== null && diagnosaPercentage !== null && */ (
+  
         <View style={styles.diagnosaContainer}>
-          <Text style={styles.diagnosaText}>Hasil Diagnosa: {/*diagnosaResult*/}/</Text>
-          <Text style={styles.diagnosaText}>Persentase: {/*diagnosaPercentage*/}%</Text>
+          <Text style={styles.diagnosaText}>Hasil Diagnosa: {diagnosaResult}</Text>
+          <Text style={styles.diagnosaText}>Persentase: {diagnosaPercentage}%</Text>
         </View>
-      )}
+
     </View>
   );
 };
