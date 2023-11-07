@@ -3,13 +3,13 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAvaD6_r7MwqkgfkrbSdq6_m__n_D6rtZM',
-  authDomain: 'chatingwithfirebase-f5dc2.firebaseapp.com',
+  apiKey: "AIzaSyBK_uS8cxhfuyJUG7UduCca7RIe_TrzG0Y",
+  authDomain: "smarth-health-new.firebaseapp.com",
   projectId: 'chatingwithfirebase-f5dc2',
-  storageBucket: 'chatingwithfirebase-f5dc2.appspot.com',
-  messagingSenderId: '1045817551204',
-  appId: '1:1045817551204:web:53065c7be154216b95b271',
-  measurementId: 'G-XD30Y5665F',
+  storageBucket: "smarth-health-new.appspot.com",
+  messagingSenderId: "943365956925",
+  appId: "1:943365956925:web:5ef35dd9acd17e9c281154",
+  measurementId: "G-Q6RTSDS0VS"
 };
 
 firebase.initializeApp(firebaseConfig);
