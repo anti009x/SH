@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image,Alert } from 'react-native'
 
 import FormInput from '../../../../components/FormInput';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
@@ -16,8 +16,10 @@ const DaftarAkun = ({navigation}) => {
         email: '',
         password: '',
         nomor_hp: '',
+        verificationCode: '',
     });
     const [showMessage, setShowMessage] = useState(null);
+    const [isSuccessSend, setIsSuccessSend] = useState(false);
     const [countdownTime, setCountdownTime] = useState(0);
     const [countingDown, setCountingDown] = useState(false);
 
@@ -35,6 +37,10 @@ const DaftarAkun = ({navigation}) => {
     
       
       const sendCode = async () => {
+        //07/11/23 - ngerefresh message otp
+        setShowMessage(null);
+        setIsSuccessSend(false);
+
         // Pastikan bahwa nomor HP adalah numerik
      const isNumeric = !isNaN(form.nomor_hp) && !isNaN(parseFloat(form.nomor_hp));
      if (!form.nomor_hp || !isNumeric) {
@@ -48,9 +54,20 @@ const DaftarAkun = ({navigation}) => {
              // user_id: 'user_id', // Harus diisi dengan user_id yang sesuai
            });
            const result = response.data;
+           console.log('result send otp wa: ',result)
+          //  console.log(result.success)
+
+           //07/11/23 - kalo success ngirim otp, font messagenya warna ijo
+           if (result.success == true){
+            setIsSuccessSend(true);
+
+            // 07/11/23 - skrg countdown jalan cuma pas sukses ngirim otp
+            setCountdownTime(30);
+            setCountingDown(true);
+           }
+
            setShowMessage(result.message);
-           setCountdownTime(30);
-           setCountingDown(true);
+           
          } catch (error) {
            // Handle error
          }
@@ -60,58 +77,110 @@ const DaftarAkun = ({navigation}) => {
     const dispatch = useDispatch();
 
     const daftarAkun = async () => {
-        try {
-            const datauser = await axios({
-                url: `${baseUrl.url}/akun/konsumen`,
-                method: "POST",
-                data: {
-                    nik: form.nik,
-                    email: form.email,
-                    nama: form.nama,
-                    password: form.password,
-                    nomor_hp: form.nomor_hp
-                }
-            });
 
-            dispatch({ type: "SET_LOADING", value: true });
+      let datas = {
+        nik: form.nik,
+        email: form.email,
+        nama: form.nama,
+        password: form.password,
+        nomor_hp: form.nomor_hp,
 
-            configfirebase.auth()
-                .createUserWithEmailAndPassword(form.email, form.password)
-                .then(async (sukses) => {
-                    const datakonsumen = {
-                        id_konsumen: datauser.data.konsumen_id,
-                        nik: form.nik,
-                        nomor_hp: form.nomor_hp,
-                        email: form.email,
-                        nama: form.nama,
-                        uid: sukses.user.uid
-                    }
 
-                    await axios({
-                        url: `${baseUrl.url}/akun/user/uid`,
-                        method: "PUT",
-                        data: {
-                            id: datauser.data.user,
-                            uuid_firebase: datakonsumen.uid
-                        }
-                    })
+        verification_code: form.verificationCode, // ---> biang keroknya di sini: parameter apinya 'verification_code' bukan 'verificationCode', untuk input fieldnya aman
+      // ^^^^^^^^^^^^^^^^
+    };
 
-                    configfirebase.database()
-                        .ref(`users/konsumen/` + sukses.user.uid + "/")
-                        .set(datakonsumen)
-
-                    dispatch({ type: "SET_LOADING", value: false });
-
-                    console.log(sukses.user.uid);
-                    // showSuccess("Good Job, Daftar Berhasil", "Akun Anda Berhasil di Daftarkan");
-
-                    navigation.navigate(Navigasi.LOGIN)
-                })
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    console.log(datas)
+    try {
+      const datauser = await axios({
+        url: `${baseUrl.url}/akun/konsumen`,
+        method: "POST",
+        data: datas
+      });
+    
+      console.log("response dari api: ", datauser.data);
+    
+      if (datauser.data.success == true) {
+        // Sukses mengirim data ke API
+        configfirebase.auth()
+          .createUserWithEmailAndPassword(form.email, form.password)
+          .then(async (sukses) => {
+            const datakonsumen = {
+              id_konsumen: datauser.data.konsumen_id,
+              nik: form.nik,
+              nomor_hp: form.nomor_hp,
+              email: form.email,
+              nama: form.nama,
+              uid: sukses.user.uid
+            }
+    
+            await axios({
+              url: `${baseUrl.url}/akun/user/uid`,
+              method: "PUT",
+              data: {
+                id: datauser.data.user,
+                uuid_firebase: datakonsumen.uid
+              }
+            })
+    
+            configfirebase.database()
+              .ref(`users/konsumen/` + sukses.user.uid + "/")
+              .set(datakonsumen)
+    
+            // Matikan loading setelah operasi selesai
+            dispatch({ type: "SET_LOADING", value: false });
+    
+            // Tampilkan alert sukses dengan informasi tambahan
+            Alert.alert(
+              'Sukses',
+              'Data berhasil terkirim dan akun berhasil dibuat',
+              [
+                { text: 'OK', onPress: () => navigation.navigate(Navigasi.LOGIN) }
+              ]
+            );
+    
+            console.log(sukses.user.uid);
+          })
+          .catch((error) => {
+            // Tangkap kesalahan jika ada
+            console.error('Kesalahan saat membuat akun Firebase:', error);
+            // Tampilkan alert kesalahan jika diperlukan
+            Alert.alert(
+              'Kesalahan',
+              'Terjadi kesalahan saat membuat akun Firebase',
+              [
+                { text: 'OK', onPress: () => console.log('OK ditekan') }
+              ]
+            );
+            // Matikan loading jika ada kesalahan
+            dispatch({ type: "SET_LOADING", value: false });
+          });
+      } else {
+        // Data tidak berhasil terkirim ke API
+        // Matikan loading jika data tidak berhasil terkirim
+        dispatch({ type: "SET_LOADING", value: false });
+        // Tampilkan alert kesalahan jika data tidak berhasil terkirim
+        Alert.alert(
+          'Kesalahan',
+          'Terjadi kesalahan saat mengirim data harap diisi semua datanya',
+          [
+            { text: 'OK', onPress: () => console.log('OK ditekan') }
+          ]
+        );
+      }
+    } catch (error) {
+      // Tangkap kesalahan jika ada
+      console.error('Kesalahan:', error);
+      // Tampilkan alert kesalahan jika diperlukan
+      Alert.alert(
+        'Kesalahan',
+        'Terjadi kesalahan saat mengirim data / check kode verifikasinya',
+        [
+          { text: 'OK', onPress: () => console.log('OK ditekan') }
+        ]
+      );
+    };
+  }
 
     return (
         <>
@@ -136,6 +205,7 @@ const DaftarAkun = ({navigation}) => {
             <FormInput
   style={styles.input}
   value={form.verificationCode}
+  keyBoardType="numeric"
   placeholder="Masukkan kode verifikasi"
   onChangeText={value => setForm("verificationCode", value)} // Perbaiki typo di sini
 />
@@ -146,7 +216,7 @@ const DaftarAkun = ({navigation}) => {
             ) : (
               <Text style={styles.countdown}>Kirim Ulang ({countdownTime})</Text>
             )}
-            {showMessage && <Text style={styles.message}>{showMessage}</Text>}
+            {showMessage && <Text style={isSuccessSend ? styles.messageSuccess : styles.messageError}>{showMessage}</Text>}
 
             {/* Link to send verification code to email */}
             <Text style={styles.linkText} onPress={() => {/* Logika untuk mengirim email */}}>
@@ -232,8 +302,13 @@ const styles = StyleSheet.create({
         color: 'grey',
         margin: 10,
       },
-      message: {
+      messageSuccess: {
         color: 'green',
+        margin: 10,
+      },
+
+      messageError: {
+        color: 'red',
         margin: 10,
       },
       linkText: {
@@ -270,4 +345,3 @@ const styles = StyleSheet.create({
 });
 
 export default DaftarAkun;
-
