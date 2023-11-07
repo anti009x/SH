@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+
 import FormInput from '../../../../components/FormInput';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
 import { baseUrl, showSuccess, useForm } from '../../../../utils';
@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { configfirebase } from '../../../../firebase/firebaseConfig';
 import Navigasi from '../../../../partials/navigasi';
-
+import React, { useState, useEffect } from 'react';
 const DaftarAkun = ({navigation}) => {
 
     const [form, setForm] = useForm({
@@ -17,6 +17,45 @@ const DaftarAkun = ({navigation}) => {
         password: '',
         nomor_hp: '',
     });
+    const [showMessage, setShowMessage] = useState(null);
+    const [countdownTime, setCountdownTime] = useState(0);
+    const [countingDown, setCountingDown] = useState(false);
+
+    useEffect(() => {
+        let intervalId;
+        if (countingDown && countdownTime > 0) {
+          intervalId = setInterval(() => {
+            setCountdownTime((time) => time - 1);
+          }, 1000);
+        } else if (countdownTime === 0) {
+          setCountingDown(false);
+        }
+        return () => clearInterval(intervalId);
+      }, [countingDown, countdownTime]);
+    
+      
+      const sendCode = async () => {
+        // Pastikan bahwa nomor HP adalah numerik
+     const isNumeric = !isNaN(form.nomor_hp) && !isNaN(parseFloat(form.nomor_hp));
+     if (!form.nomor_hp || !isNumeric) {
+       // Handle error jika nomor HP tidak ada atau bukan numerik
+       setShowMessage("Nomor HP harus numerik");
+       return;
+         }
+         try {
+           const response = await axios.post(`${baseUrl.url}/send-otp-wa`, {
+             to: form.nomor_hp,
+             // user_id: 'user_id', // Harus diisi dengan user_id yang sesuai
+           });
+           const result = response.data;
+           setShowMessage(result.message);
+           setCountdownTime(30);
+           setCountingDown(true);
+         } catch (error) {
+           // Handle error
+         }
+       };
+ 
 
     const dispatch = useDispatch();
 
@@ -92,6 +131,28 @@ const DaftarAkun = ({navigation}) => {
                         <FormInput icon={"document-text-sharp"} placeholder="Masukkan E - Mail" value={form.email} placeholderTextColor={"grey"} onChangeText={value => setForm("email", value)} />
                         <FormInput icon={"eye"} placeholder="Masukkan Password" value={form.password} placeholderTextColor={"grey"} secureTextEntry={true} onChangeText={value => setForm("password", value)} />
                         <FormInput icon={"call"} placeholder="Masukkan Nomor HP" value={form.nomor_hp} placeholderTextColor={"grey"} keyBoardType="numeric" onChangeText={value => setForm("nomor_hp", value)} />
+                     
+                        <Text style={styles.label}>Kode Verifikasi</Text>
+            <FormInput
+  style={styles.input}
+  value={form.verificationCode}
+  placeholder="Masukkan kode verifikasi"
+  onChangeText={value => setForm("verificationCode", value)} // Perbaiki typo di sini
+/>
+            {!countingDown ? (
+              <TouchableOpacity onPress={sendCode} style={styles.buttonKirim}>
+                <Text style={styles.buttonText}>Kirim</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.countdown}>Kirim Ulang ({countdownTime})</Text>
+            )}
+            {showMessage && <Text style={styles.message}>{showMessage}</Text>}
+
+            {/* Link to send verification code to email */}
+            <Text style={styles.linkText} onPress={() => {/* Logika untuk mengirim email */}}>
+              Kirim kode verifikasi ke email? Klik di sini
+            </Text>
+
                         <TouchableOpacity
                             onPress={() => {
                                 daftarAkun();
@@ -137,6 +198,49 @@ const DaftarAkun = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+
+    label: {
+        marginLeft: 15,
+        marginTop: 5,
+        borderRadius: 10,
+        fontFamily: 'Poppins-Medium',
+        fontSize:15,
+        borderColor:'#7FFFD4',
+      },
+      input: {
+        height: 40,
+        margin: 10,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 4,
+        borderColor: '#ddd',
+        fontFamily: 'Poppins-Medium',
+        fontSize:13,
+       
+      },
+      buttonKirim: {
+        alignItems: 'center',
+        backgroundColor: '#007bff',
+        padding: 10,
+        borderRadius: 4,
+        margin: 10,
+      },
+      buttonText: {
+        color: 'white',
+      },
+      countdown: {
+        color: 'grey',
+        margin: 10,
+      },
+      message: {
+        color: 'green',
+        margin: 10,
+      },
+      linkText: {
+        color: 'blue',
+        margin: 10,
+        textDecorationLine: 'underline',
+      },
     textHeader: {
         paddingHorizontal: 10,
         paddingTop: 10,
@@ -166,3 +270,4 @@ const styles = StyleSheet.create({
 });
 
 export default DaftarAkun;
+

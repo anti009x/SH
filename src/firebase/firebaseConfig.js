@@ -6,19 +6,14 @@ import 'firebase/compat/database';
 import 'firebase/compat/app-check';
 
 const firebaseConfig = {
-
-  apiKey: "AIzaSyD_deh476Mdq9ri_74dFn6ooCFt5HFq_Do",
-  authDomain: "smarthealth-360f7.firebaseapp.com",
-  databaseURL: "https://smarthealth-360f7-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "smarthealth-360f7",
-  storageBucket: "smarthealth-360f7.appspot.com",
-  messagingSenderId: "578290916365",
-  appId: "1:578290916365:web:8c689a536f9479d15fc944",
-  measurementId: "G-M6CYMSJDD9"
-
-
-
-
+  apiKey: "AIzaSyBK_uS8cxhfuyJUG7UduCca7RIe_TrzG0Y",
+  authDomain: "smarth-health-new.firebaseapp.com",
+  databaseURL: "https://smarth-health-new-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smarth-health-new",
+  storageBucket: "smarth-health-new.appspot.com",
+  messagingSenderId: "943365956925",
+  appId: "1:943365956925:web:5ef35dd9acd17e9c281154",
+  measurementId: "G-Q6RTSDS0VS"
 };
 
 const configfirebase = firebase.initializeApp(firebaseConfig);
