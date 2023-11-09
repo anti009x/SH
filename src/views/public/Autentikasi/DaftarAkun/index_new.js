@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image,Alert } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
 
 import FormInput from '../../../../components/FormInput';
 import StatusBarComponent from '../../../../components/StatusBar/StatusBarComponent';
@@ -91,96 +91,61 @@ const DaftarAkun = ({navigation}) => {
     };
 
     console.log(datas)
-    try {
-      const datauser = await axios({
-        url: `${baseUrl.url}/akun/konsumen`,
-        method: "POST",
-        data: datas
-      });
-    
-      console.log("response dari api: ", datauser.data);
-    
-      if (datauser.data.success == true) {
-        // Sukses mengirim data ke API
-        configfirebase.auth()
-          .createUserWithEmailAndPassword(form.email, form.password)
-          .then(async (sukses) => {
-            const datakonsumen = {
-              id_konsumen: datauser.data.konsumen_id,
-              nik: form.nik,
-              nomor_hp: form.nomor_hp,
-              email: form.email,
-              nama: form.nama,
-              uid: sukses.user.uid
+        try {
+            const datauser = await axios({
+                url: `${baseUrl.url}/akun/konsumen`,
+                method: "POST",
+                data: datas
+            });
+
+            console.log("response dari api: ",datauser.data)
+
+            //matiin loading dulu - 07/11/23 - by rifqi
+            // dispatch({ type: "SET_LOADING", value: true });
+
+            // nyimpen data user di firebase kalo berhasil register di api alias ```datauser.data.success == true```
+            // 07/11/23 - by rifqi
+            if (datauser.data.success == true) { // <-- ini yang baru gw tambahin
+
+              configfirebase.auth()
+                .createUserWithEmailAndPassword(form.email, form.password)
+                .then(async (sukses) => {
+                    const datakonsumen = {
+                        id_konsumen: datauser.data.konsumen_id,
+                        nik: form.nik,
+                        nomor_hp: form.nomor_hp,
+                        email: form.email,
+                        nama: form.nama,
+                        uid: sukses.user.uid
+                    }
+
+                    await axios({
+                        url: `${baseUrl.url}/akun/user/uid`,
+                        method: "PUT",
+                        data: {
+                            id: datauser.data.user,
+                            uuid_firebase: datakonsumen.uid
+                        }
+                    })
+
+                    configfirebase.database()
+                        .ref(`users/konsumen/` + sukses.user.uid + "/")
+                        .set(datakonsumen)
+
+                    dispatch({ type: "SET_LOADING", value: false });
+
+                    // console.log('sule nih :P senggol dong');
+                    console.log(sukses.user.uid);
+                    // showSuccess("Good Job, Daftar Berhasil", "Akun Anda Berhasil di Daftarkan");
+
+                    navigation.navigate(Navigasi.LOGIN)
+                })
             }
-    
-            await axios({
-              url: `${baseUrl.url}/akun/user/uid`,
-              method: "PUT",
-              data: {
-                id: datauser.data.user,
-                uuid_firebase: datakonsumen.uid
-              }
-            })
-    
-            configfirebase.database()
-              .ref(`users/konsumen/` + sukses.user.uid + "/")
-              .set(datakonsumen)
-    
-            // Matikan loading setelah operasi selesai
-            dispatch({ type: "SET_LOADING", value: false });
-    
-            // Tampilkan alert sukses dengan informasi tambahan
-            Alert.alert(
-              'Sukses',
-              'Data berhasil terkirim dan akun berhasil dibuat',
-              [
-                { text: 'OK', onPress: () => navigation.navigate(Navigasi.LOGIN) }
-              ]
-            );
-    
-            console.log(sukses.user.uid);
-          })
-          .catch((error) => {
-            // Tangkap kesalahan jika ada
-            console.error('Kesalahan saat membuat akun Firebase:', error);
-            // Tampilkan alert kesalahan jika diperlukan
-            Alert.alert(
-              'Kesalahan',
-              'Terjadi kesalahan saat membuat akun Firebase',
-              [
-                { text: 'OK', onPress: () => console.log('OK ditekan') }
-              ]
-            );
-            // Matikan loading jika ada kesalahan
-            dispatch({ type: "SET_LOADING", value: false });
-          });
-      } else {
-        // Data tidak berhasil terkirim ke API
-        // Matikan loading jika data tidak berhasil terkirim
-        dispatch({ type: "SET_LOADING", value: false });
-        // Tampilkan alert kesalahan jika data tidak berhasil terkirim
-        Alert.alert(
-          'Kesalahan',
-          'Terjadi kesalahan saat mengirim data harap diisi semua datanya',
-          [
-            { text: 'OK', onPress: () => console.log('OK ditekan') }
-          ]
-        );
-      }
-    } catch (error) {
-      // Tangkap kesalahan jika ada
-      console.error('Kesalahan:', error);
-      // Tampilkan alert kesalahan jika diperlukan
-      Alert.alert(
-        'Kesalahan',
-        'Terjadi kesalahan saat mengirim data / check kode verifikasinya',
-        [
-          { text: 'OK', onPress: () => console.log('OK ditekan') }
-        ]
-      );
-    };
-  }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -345,3 +310,4 @@ const styles = StyleSheet.create({
 });
 
 export default DaftarAkun;
+
