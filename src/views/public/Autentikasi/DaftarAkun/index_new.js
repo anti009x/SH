@@ -35,6 +35,38 @@ const DaftarAkun = ({navigation}) => {
         return () => clearInterval(intervalId);
       }, [countingDown, countdownTime]);
     
+
+      const sendEmailCode = async () => {
+        setShowMessage(null);
+        setIsSuccessSend(false);
+        setShowMessageMail(null);
+      
+        if (!form.email) {
+          setEmailError("Mohon isi alamat email Anda");
+          return;
+        }
+      
+        setEmailError(null);
+      
+        try {
+          const response = await axios.post(`${baseUrl.url}/send-otp-email`, {
+            email: form.email,
+          });
+      
+          const result = response.data;
+      
+          if (result.success === false) {
+            setSendSuccess(false);
+            setShowMessageMail(result.message ?? "Kode verifikasi gagal dikirim ke email Anda");
+          } else {
+            setSendSuccess(true);
+            setShowMessageMail(result.message ?? "Kode verifikasi berhasil dikirim ke email Anda");
+            setCountdown();
+          }
+        } catch (error) {
+          // Handle error
+        }
+      };
       
       const sendCode = async () => {
         //07/11/23 - ngerefresh message otp
@@ -167,13 +199,13 @@ const DaftarAkun = ({navigation}) => {
                         <FormInput icon={"call"} placeholder="Masukkan Nomor HP" value={form.nomor_hp} placeholderTextColor={"grey"} keyBoardType="numeric" onChangeText={value => setForm("nomor_hp", value)} />
                      
                         <Text style={styles.label}>Kode Verifikasi</Text>
-            <FormInput
-  style={styles.input}
-  value={form.verificationCode}
-  keyBoardType="numeric"
-  placeholder="Masukkan kode verifikasi"
-  onChangeText={value => setForm("verificationCode", value)} // Perbaiki typo di sini
-/>
+                                <FormInput
+                                style={styles.input}
+                                value={form.verificationCode}
+                                keyBoardType="numeric"
+                                placeholder="Masukkan kode verifikasi"
+                                onChangeText={value => setForm("verificationCode", value)} // Perbaiki typo di sini
+                              />
             {!countingDown ? (
               <TouchableOpacity onPress={sendCode} style={styles.buttonKirim}>
                 <Text style={styles.buttonText}>Kirim</Text>
@@ -184,9 +216,9 @@ const DaftarAkun = ({navigation}) => {
             {showMessage && <Text style={isSuccessSend ? styles.messageSuccess : styles.messageError}>{showMessage}</Text>}
 
             {/* Link to send verification code to email */}
-            <Text style={styles.linkText} onPress={() => {/* Logika untuk mengirim email */}}>
-              Kirim kode verifikasi ke email? Klik di sini
-            </Text>
+            <Text style={styles.linkText} onPress={sendEmailCode}>
+  Kirim kode verifikasi ke email? Klik di sini
+</Text>
 
                         <TouchableOpacity
                             onPress={() => {

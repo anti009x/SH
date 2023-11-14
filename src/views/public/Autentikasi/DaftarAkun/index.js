@@ -22,6 +22,7 @@ const DaftarAkun = ({navigation}) => {
     const [isSuccessSend, setIsSuccessSend] = useState(false);
     const [countdownTime, setCountdownTime] = useState(0);
     const [countingDown, setCountingDown] = useState(false);
+   
 
     useEffect(() => {
         let intervalId;
@@ -35,6 +36,39 @@ const DaftarAkun = ({navigation}) => {
         return () => clearInterval(intervalId);
       }, [countingDown, countdownTime]);
     
+
+      const sendEmailCode = async () => {
+        // 07/11/23 - ngerefresh message otp
+        setShowMessage(null);
+        setIsSuccessSend(false);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!form.email || !emailRegex.test(form.email)) {
+          setShowMessage("Masukkan alamat email yang valid");
+          return;
+        }
+        setShowMessage(null);
+        try {
+          const response = await axios.post(`${baseUrl.url}/send-otp-email`, {
+            email: form.email,
+          });
+          const result = response.data;
+          console.log('result send otp email: ', result);
+          // console.log(result.success)
+          // 07/11/23 - kalo success ngirim otp, font messagenya warna ijo
+          if (result.success == true) {
+            setIsSuccessSend(true);
+      
+            // 07/11/23 - skrg countdown jalan cuma pas sukses ngirim otp
+            setCountdownTime(30);
+            setCountingDown(true);
+          }
+      
+          setShowMessage(result.message);
+      
+        } catch (error) {
+          // Handle error
+        }
+      };
       
       const sendCode = async () => {
         //07/11/23 - ngerefresh message otp
@@ -77,6 +111,27 @@ const DaftarAkun = ({navigation}) => {
     const dispatch = useDispatch();
 
     const daftarAkun = async () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!form.nik) {
+        setShowMessage("Masukkan NIK");
+        return;
+      } else if (!form.nama) {
+        setShowMessage("Masukkan Nama");
+        return;
+      }else if (!form.email || !emailRegex.test(form.email)) {
+        setShowMessage("Masukan Email Yang Valid");
+        return;
+      }else if (!form.password) {
+        setShowMessage("Masukkan Password");
+        return;
+      }else if (!form.nomor_hp) {
+        setShowMessage("Masukkan No.Hp");
+        return;
+      }else if (!form.verificationCode) {
+        setShowMessage("Masukan Kode Verifikasi Yang Valid");
+        return;
+      }
+   
 
       let datas = {
         nik: form.nik,
@@ -162,7 +217,7 @@ const DaftarAkun = ({navigation}) => {
         // Tampilkan alert kesalahan jika data tidak berhasil terkirim
         Alert.alert(
           'Kesalahan',
-          'Terjadi kesalahan saat mengirim data harap diisi semua datanya',
+          'Terjadi kesalahan saat mengirim data check kode verifikasinya',
           [
             { text: 'OK', onPress: () => console.log('OK ditekan') }
           ]
@@ -174,7 +229,7 @@ const DaftarAkun = ({navigation}) => {
       // Tampilkan alert kesalahan jika diperlukan
       Alert.alert(
         'Kesalahan',
-        'Terjadi kesalahan saat mengirim data / check kode verifikasinya',
+        'Terjadi kesalahan saat mengirim data check kode verifikasinyaa',
         [
           { text: 'OK', onPress: () => console.log('OK ditekan') }
         ]
@@ -197,7 +252,7 @@ const DaftarAkun = ({navigation}) => {
                     <View style={styles.viewCard}>
                         <FormInput icon={"newspaper-sharp"} placeholder="Masukkan NIK" value={form.nik} keyBoardType='numeric' placeholderTextColor={"grey"} onChangeText={value => setForm("nik", value)} />
                         <FormInput icon={"person"} placeholder="Masukkan Nama Lengkap" value={form.nama} placeholderTextColor={"grey"} onChangeText={value => setForm("nama", value)} />
-                        <FormInput icon={"document-text-sharp"} placeholder="Masukkan E - Mail" value={form.email} placeholderTextColor={"grey"} onChangeText={value => setForm("email", value)} />
+                        <FormInput icon={"document-text-sharp"} placeholder="Masukkan E - Mail" keyboardType="email-address" value={form.email} placeholderTextColor={"grey"} onChangeText={value => setForm("email", value)} />
                         <FormInput icon={"eye"} placeholder="Masukkan Password" value={form.password} placeholderTextColor={"grey"} secureTextEntry={true} onChangeText={value => setForm("password", value)} />
                         <FormInput icon={"call"} placeholder="Masukkan Nomor HP" value={form.nomor_hp} placeholderTextColor={"grey"} keyBoardType="numeric" onChangeText={value => setForm("nomor_hp", value)} />
                      
@@ -219,9 +274,16 @@ const DaftarAkun = ({navigation}) => {
             {showMessage && <Text style={isSuccessSend ? styles.messageSuccess : styles.messageError}>{showMessage}</Text>}
 
             {/* Link to send verification code to email */}
-            <Text style={styles.linkText} onPress={() => {/* Logika untuk mengirim email */}}>
-              Kirim kode verifikasi ke email? Klik di sini
-            </Text>
+            
+            {!countingDown ? (
+  <TouchableOpacity onPress={sendEmailCode}>
+    <Text style={styles.linkText}>Kirim kode verifikasi ke email? Klik disini</Text>
+  </TouchableOpacity>
+) : (
+  <Text style={styles.countdown}>Kirim Ulang melalui Email ({countdownTime})</Text>
+)}
+        
+
 
                         <TouchableOpacity
                             onPress={() => {
@@ -295,6 +357,8 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         margin: 10,
       },
+
+    
       buttonText: {
         color: 'white',
       },
