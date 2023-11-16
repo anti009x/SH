@@ -11,7 +11,7 @@ const JadwalDokter = () => {
   const [specializations, setSpecializations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fadeAnims, setFadeAnims] = useState([]);
-
+  
 
   useEffect(() => {
     getDataUserLocal();
@@ -79,20 +79,55 @@ const JadwalDokter = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  selectedCard: {
+    padding: 16,
+    width: (width - 40) / 3.2,
+    borderRadius: 10,
+
+    width: width, // Set the width to the full width of the screen
+    alignSelf: 'stretch', // Ensure it stretches to the full width if it's inside another container
+    marginBottom: 10,
+    marginTop: 10, // Adjust as needed
+  },
+
+  inputContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+  },
+  input: {
+    flex: 1,
+    marginRight: 10,
     padding: 10,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  sendButton: {
+    padding: 10,
+    backgroundColor: 'blue',
+    borderRadius: 5,
+  },
+  sendButtonText: {
+    color: 'white',
+    textAlign: 'center',
   },
   card: {
     padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: (width - 40) / 3.2,
     marginBottom: 10,
+
+  },
+
+  
+  botText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 16,
+    marginTop: 8,
   },
 });
 

@@ -47,6 +47,7 @@ export default {
   DIAGNOSA:"Diagnosa",
   JADWAL_DOKTER: "JadwalDokter",
   JADWAL_POLIKLINIK: "JadwalPoliklinik",
+  JADWAL_RS: "JadwalRs",
 
 
   // Dokter

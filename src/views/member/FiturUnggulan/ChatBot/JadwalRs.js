@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Animated, Dimensions, TouchableOpacity, Image } from 'react-native';
 import axios from 'axios';
-import { getData,baseUrl } from '../../../../utils';
-import { TouchableOpacity } from 'react-native';
-import JadwalDokter from './JadwalDokter';
-
+import { getData, baseUrl } from '../../../../utils';
+import JadwalPoliklinik from './JadwalPoliklinik';
 
 const { width } = Dimensions.get('window');
 
-const JadwalPoliklinik = () => {
+const JadwalRs = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [dataPribadi, setDataPribadi] = useState({});
   const [specializations, setSpecializations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [fadeAnims, setFadeAnims] = useState([]);  // Gunakan useState
-  const [doctorNames, setDoctorNames] = useState([]);
-  const [showJadwalDokter, setShowJadwalDokter] = useState(false);
+  const [fadeAnims, setFadeAnims] = useState([]);
+  const [selectedSpecializationData, setSelectedSpecializationData] = useState(null);
+  const [showPoliknikList, setShowPoliknikList] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
+  const fadeAnimCard2 = useState(new Animated.Value(0))[0];
+  const moveAnimCard2 = useState(new Animated.Value(0))[0];
+
+  const handleCard1Click = () => {
+    setShowPoliknikList(!showPoliknikList);
+    Animated.timing(fadeAnim, {
+      toValue: showPoliknikList ? 0 : 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
 
   useEffect(() => {
     getDataUserLocal();
   }, [dataPribadi.token]);
+
+  const getDataUserLocal = () => {
+    getData('dataUser').then(res => {
+      setDataPribadi(res);
+    });
+  };
 
   useEffect(() => {
     if (selectedCard) {
@@ -32,63 +47,30 @@ const JadwalPoliklinik = () => {
     }
   }, [selectedCard]);
 
-  const handleCardClick = async (specialization) => {
-    setSelectedCard(specialization.nama_spesialis);
-    
-    try {
-      const response = await axios({
-        url: `http://192.168.100.56:8000/api/master/spesialis/SPS-001/get_dokter`,
-        headers: {
-          Authorization: 'Bearer ' + dataPribadi.token
-      },
-      method: "GET"
-      });
-      
-      const names = response.data.data.map(item => item.user.nama);
-      setDoctorNames(names);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getDataUserLocal = () => {
-    getData('dataUser').then(res => {
-      setDataPribadi(res);
-    });
-  };
-
-  const handleCard1Click = () => {
-    setShowJadwalDokter(!showJadwalDokter);
-    Animated.timing(fadeAnim, {
-      toValue: showJadwalDokter ? 0 : 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios({
-          url: `${baseUrl.url}/master/penyakit/spesialis_penyakit`,
+          url: `${baseUrl.url}/master/rumah_sakit/data`,
           headers: {
-              Authorization: 'Bearer ' + dataPribadi.token
+            Authorization: 'Bearer ' + dataPribadi.token,
           },
-          method: "GET"
-      });
+          method: 'GET',
+        });
         setSpecializations(response.data.data);
         const newFadeAnims = animateFadeIn(response.data.data.length);
         setFadeAnims(newFadeAnims);
         setIsLoading(false);
       } catch (error) {
+        // console.error(error);
         setIsLoading(false);
       }
     };
     fetchData();
   }, [dataPribadi.token]);
-  const animateFadeIn = (length) => {
+
+  const animateFadeIn = length => {
     const anims = [];
-    // Generate fade animations for each specialization
     for (let i = 0; i < length; i++) {
       const fadeAnim = new Animated.Value(0);
       anims.push(fadeAnim);
@@ -96,10 +78,14 @@ const JadwalPoliklinik = () => {
         toValue: 1,
         duration: 1000,
         useNativeDriver: true,
-        delay: 1000 * i
+        delay: 1000 * i,
       }).start();
     }
     return anims;
+  };
+
+  const handleCardClick = async specialization => {
+    setSelectedCard(specialization.nama_rs);
   };
 
   return (
@@ -109,14 +95,13 @@ const JadwalPoliklinik = () => {
       ) : (
         specializations.map((specialization, index) => (
           <TouchableOpacity key={index} onPress={() => handleCardClick(specialization)}>
-              <Animated.View style={[styles.card, { opacity: fadeAnims[index] }]}>
-                  <Text>{specialization.nama_spesialis}</Text>
-              </Animated.View>
+            <Animated.View style={[styles.card, { opacity: fadeAnims[index] }]}>
+              <Text>{specialization.nama_rs}</Text>
+            </Animated.View>
           </TouchableOpacity>
-      ))
-      
+        ))
       )}
- {selectedCard && (
+      {selectedCard && (
         <View style={styles.container}>
 
 <TouchableOpacity onPress={handleCard1Click}>
@@ -129,12 +114,12 @@ const JadwalPoliklinik = () => {
                 <Text style={{ marginLeft: 10 }}>Sule</Text>
             </View>
             <Animated.Text style={{ opacity: fadeAnim }}>
-                Apakah Anda Ingin Bertanya Mengenai Jadwal Dokter? ?
+                Apakah Anda Ingin Bertanya Mengenai Jadwal Poliknik ?
             </Animated.Text>
           </Animated.View>
          
         </TouchableOpacity>
-        {showJadwalDokter && <JadwalDokter />}
+        {showPoliknikList && <JadwalPoliklinik />}
         </View>
       )}
     </View>
@@ -194,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default JadwalPoliklinik;
+export default JadwalRs;
