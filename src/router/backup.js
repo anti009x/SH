@@ -63,6 +63,7 @@ import ProdukByKategori from '../views/member/Produk/TokoKesehatanProduk/ProdukB
 import Pembayaran from '../views/member/Produk/TokoKesehatanProduk/Pembayaran';
 import LanjutkanPembayaranKonsultasi from '../views/member/DetailChat/LanjutkanPembayaranKonsultasi';
 import JadwalDokter from '../views/member/FiturUnggulan/ChatBot';
+import JadwalRs from '../views/member/FiturUnggulan/ChatBot';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -282,6 +283,12 @@ const Router = () => {
          <Stack.Screen
         name={Navigasi.JADWAL_DOKTER}
         component={JadwalDokter}
+        options={{ headerShown: false }}
+      />
+
+<Stack.Screen
+        name={Navigasi.JADWAL_RS}
+        component={JadwalRs}
         options={{ headerShown: false }}
       />
       <Stack.Screen

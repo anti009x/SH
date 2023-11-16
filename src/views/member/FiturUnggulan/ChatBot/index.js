@@ -9,6 +9,7 @@ import { Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import JadwalDokter from './JadwalDokter';
+import JadwalRs from './JadwalRs';
 
 const ChatBot = ({}) => {
   const navigation = useNavigation();
@@ -18,7 +19,7 @@ const ChatBot = ({}) => {
 
   const [showPoliknikList, setShowPoliknikList] = useState(false);
 
-  const [showJadwalDokter, setShowJadwalDokter] = useState(false);
+  const [showJadwalRs, setShowJadwalRs] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -36,7 +37,7 @@ const ChatBot = ({}) => {
   };
 
   const handleCard2Click = () => {
-    setShowJadwalDokter(!showJadwalDokter);
+    setShowJadwalRs(!showJadwalRs);
 
   };
 
@@ -66,7 +67,7 @@ const ChatBot = ({}) => {
       <ScrollView style={{ flex: 1, padding: 16, flexDirection: 'column' }}>
 
         {/* card1 */}
-        <TouchableOpacity onPress={handleCard1Click}>
+        {/* <TouchableOpacity onPress={handleCard1Click}>
     <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
@@ -82,7 +83,7 @@ const ChatBot = ({}) => {
          
         </TouchableOpacity>
         {showPoliknikList && <JadwalPoliklinik />}
-   
+    */}
         {/* card2 */}
         <TouchableOpacity onPress={handleCard2Click}>
     <Animated.View style={[styles.card, { opacity: fadeAnimCard2 }]}>
@@ -94,12 +95,12 @@ const ChatBot = ({}) => {
                 <Text style={{ marginLeft: 10 }}>Sule</Text>
             </View>
             <Animated.Text style={{ opacity: fadeAnimCard2 }}>
-                Apakah Anda Ingin Bertanya Mengenai Jadwal Dokter? ?
+                Apakah Anda Ingin Bertanya Mengenai Rumah Sakit Terdekat?
             </Animated.Text>
           </Animated.View>
         
         </TouchableOpacity>
-        {showJadwalDokter && <JadwalDokter />}
+        {showJadwalRs && <JadwalRs />}
         </ScrollView>
 
  

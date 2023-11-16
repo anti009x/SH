@@ -52,6 +52,7 @@ import Riwayat from '../views/perawat/Riwayat';
 import Reservasi from '../views/member/FiturUnggulan/Reservasi';
 import ChatBot from '../views/member/FiturUnggulan/ChatBot';
 import JadwalDokter from '../views/member/FiturUnggulan/ChatBot/JadwalDokter';
+import JadwalRs from '../views/member/FiturUnggulan/ChatBot/JadwalRs';
 import JadwalPoliklinik from '../views/member/FiturUnggulan/ChatBot/JadwalPoliklinik';
 import Diagnosa from '../views/member/FiturUnggulan/Diagnosa';
 import SpesialisBuatJanji from '../views/member/FiturUnggulan/InformasiBuatJanji/SpesialisBuatJanji';
@@ -606,6 +607,12 @@ const Router = () => {
        <Stack.Screen
         name={Navigasi.JADWAL_DOKTER}
         component={JadwalDokter}
+        options={{ headerShown: false }}
+      />
+
+<Stack.Screen
+        name={Navigasi.JADWAL_RS}
+        component={JadwalRs}
         options={{ headerShown: false }}
       />
 
