@@ -257,7 +257,7 @@ const DashboardMember = ({ navigation }) => {
               navigation.replace(Navigasi.DIAGNOSA)
             }}
             nameIcon={"duplicate"}
-            textfitur={"Diagnosa"}
+            textfitur={"Skrining"}
           />
         </View>
         

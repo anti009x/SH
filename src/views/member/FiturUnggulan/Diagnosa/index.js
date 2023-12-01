@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import Heading from '../../../../components/Heading';
 import axios from 'axios';
 import Navigasi from '../../../../partials/navigasi';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const Diagnosa = () => {
   const navigation = useNavigation();
   const [cameraData, setCameraData] = useState(null);
@@ -47,7 +48,7 @@ const Diagnosa = () => {
       });
 
       let response = await axios.post(
-        'http://192.168.239.116:8000/api/send-stroke-face',
+        'http://192.168.100.56:8000/api/send-stroke-face',
         formData,
         {
           headers: {
@@ -105,12 +106,17 @@ const Diagnosa = () => {
   return (
     <View style={styles.container}>
       <StatusBarComponent />
-      <Heading navigasi={() => navigation.replace(Navigasi.MAIN_APP)} textHeading={'Diagnosa'} />
+      <Heading navigasi={() => navigation.replace(Navigasi.MAIN_APP)} textHeading={'Skrining Penyakit Stroke'} />
       <View style={styles.card}>
         <TouchableOpacity onPress={openCamera}>
-          <Text>
-            Buka Kamera
-          </Text>
+        
+          <Text style={{marginLeft:30}}>
+          <Ionicons name='camera-sharp' size={50} color={"#061D81"} />
+         
+            </Text >
+            <Text style={{marginLeft:1,marginBottom:4}}>   Open Camera</Text>
+    
+          
         </TouchableOpacity>
       </View>
       <View style={styles.imageContainer}>
@@ -123,8 +129,8 @@ const Diagnosa = () => {
       </View>
   
         <View style={styles.diagnosaContainer}>
-          <Text style={styles.diagnosaText}>Hasil Diagnosa: {diagnosaResult}</Text>
-          <Text style={styles.diagnosaText}>Persentase: {diagnosaPercentage}%</Text>
+          <Text style={styles.diagnosaText}>Deskripsi: {diagnosaResult}</Text>
+          <Text style={styles.diagnosaText}>Kecenderungan: {diagnosaPercentage}%</Text>
         </View>
 
     </View>
@@ -132,15 +138,18 @@ const Diagnosa = () => {
 };
 
 const styles = StyleSheet.create({
+
+  
+
   container: {
     flex: 1,
   },
   card: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    elevation: 3,
+    backgroundColor:'white',
+    padding: 4,
+
     alignItems: 'center',
+
   },
   imageContainer: {
     alignItems: 'center',
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 350,
-    height: 300,
+    height: 400,
     marginTop: 20,
   },
   diagnosaContainer: {
