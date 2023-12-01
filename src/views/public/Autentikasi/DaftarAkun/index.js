@@ -202,7 +202,7 @@ const DaftarAkun = ({navigation}) => {
             // Tampilkan alert kesalahan jika diperlukan
             Alert.alert(
               'Kesalahan',
-              'Terjadi kesalahan saat membuat akun Firebase',
+              'Terjadi kesalahan saat membuat akun Firebase Emailnya Sudah Terdaftar Sebelumnya',
               [
                 { text: 'OK', onPress: () => console.log('OK ditekan') }
               ]
