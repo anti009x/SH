@@ -31,7 +31,7 @@ const AllArtikel = ({ navigation }) => {
     const allartikel = async () => {
         try {
             const response = await axios({
-                url: `${baseUrl.url}/master/artikel/ambil_artikel`,
+                url: `${baseUrl.url}/master/artikel`,
                 headers: {
                     Authorization: "Bearer " + dataPribadi.token
                 },

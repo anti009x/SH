@@ -31,12 +31,12 @@ const Detail = ({ navigation, route }) => {
   const getkategori = async () => {
     try {
       const response = await axios({
-        url: `${baseUrl.url}/master/grouping_artikel/${getArtikel.data.id_artikel}/get`,
+        url: `${baseUrl.url}/master/grouping_artikel`,
         headers: {
           Authorization: 'Bearer ' + dataPribadi.token
         },
         method: "GET"
-      })
+      });
 
       setkategori(response.data.data);
     } catch (error) {
@@ -79,36 +79,37 @@ const Detail = ({ navigation, route }) => {
             </ScrollView>
           ) }
           <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-            <Text style={styles.user}>
-              {getArtikel.data.get_user.nama} :
+            <Text>
+
             </Text>
-            <Text style={styles.user}>
-              {getArtikel.data.tanggal}
+            <Text >
+
             </Text>
           </View>
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              paddingTop: 10,
+              paddingTop: 1,
             }}>
-            {getArtikel.data.foto == null ? (
-              <Image
-                source={require('../../../../assets/images/gambar-rs.jpg')}
-                resizeMode="cover"
-                style={{ width: '100%', borderRadius: 10, height: 200 }}
-              />
-            ) : (
-              <Image
-                source={{ uri: getArtikel.data.foto }}
-                resizeMode="cover"
-                style={{ width: 300, height: 200 }}
-              />
-            )}
+            {getArtikel.data.foto == null || true ? (
+                <Image
+                  // source={require('../../../../assets/images/gambar-rs.jpg')}
+                  // resizeMode="cover"
+                  // style={{ width: '100%', borderRadius: 10, height: 300, top: -20 }}
+             
+                />
+              ) : (
+                <Image
+                  // source={require('../../../../assets/images/gambar-rs.jpg')}
+                  // resizeMode="cover"
+                  // style={{ width: '100%', borderRadius: 10, height: 300, top: -20 }}
+                />
+              )}
           </View>
           <View style={{ paddingTop: 10 }}>
             <Text
-              style={{ color: 'black', textAlign: 'justify', lineHeight: 20 }}>
+              style={{ color: 'black', textAlign: 'justify', lineHeight: 20,top:-20 }}>
               {getArtikel.data.deskripsi}
             </Text>
           </View>
