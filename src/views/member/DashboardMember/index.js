@@ -318,7 +318,7 @@ const DashboardMember = ({ navigation }) => {
                   <View style={styles.viewartikel}>
                     <View style={styles.viewimage}>
                       <Image
-                        source={item.foto == null ? (require("../../../assets/images/gambar-rs.jpg")) : { uri: item.foto }}
+                        source={item.foto == null || true ? (require("../../../assets/images/gambar-rs.jpg")) : { uri: item.foto }}
                         resizeMode='cover'
                         style={styles.image}
                       />
